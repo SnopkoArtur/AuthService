@@ -21,7 +21,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<ErrorDto> handleAuthException(AuthException ex, HttpServletRequest request) {
-        log.error("Authentication error: {}", ex.getMessage());
         return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), request, null);
     }
 
@@ -33,15 +32,12 @@ public class GlobalExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-
-        log.error("Validation failed at {}: {}", request.getRequestURI(), errors);
         return buildResponse(HttpStatus.BAD_REQUEST, "Validation failed", request, errors);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDto> handleGlobalException(Exception ex, HttpServletRequest request) {
-        log.error("Unexpected error: ", ex);
-        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An internal server error occurred", request, null);
+         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An internal server error occurred", request, null);
     }
 
     private ResponseEntity<ErrorDto> buildResponse(HttpStatus status, String message, HttpServletRequest request, Map<String, String> validationErrors) {
@@ -51,9 +47,7 @@ public class GlobalExceptionHandler {
                 .error(status.getReasonPhrase())
                 .message(message)
                 .path(request.getRequestURI())
-                .validationErrors(validationErrors)
-                .build();
-
+                .validationErrors(validationErrors).build();
         return new ResponseEntity<>(errorDto, status);
     }
 }

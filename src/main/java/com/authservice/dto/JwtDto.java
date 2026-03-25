@@ -10,5 +10,5 @@ public class JwtDto {
     private String accessToken;
     private String refreshToken;
 
-    private final static String type = "Bearer";
+    private static final String TYPE = "Bearer";
 }

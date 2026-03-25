@@ -31,7 +31,6 @@ public class AuthController {
     public ResponseEntity<Boolean> validate(@RequestParam String token) {
         return ResponseEntity.ok(jwtProvider.validateToken(token));
     }
-
     @PostMapping("/refresh")
     public ResponseEntity<JwtDto> refresh(@RequestParam String refreshToken) {
         return ResponseEntity.ok(authService.refresh(refreshToken));
