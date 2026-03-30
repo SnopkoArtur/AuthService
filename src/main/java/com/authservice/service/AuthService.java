@@ -1,58 +1,37 @@
 package com.authservice.service;
 
-import com.authservice.dao.UserCredentialsRepository;
 import com.authservice.dto.AuthDto;
 import com.authservice.dto.JwtDto;
 import com.authservice.dto.RegistrationDto;
-import com.authservice.entity.UserCredentials;
-import com.authservice.exception.AuthException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@RequiredArgsConstructor
-public class AuthService {
-    private final UserCredentialsRepository repository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtProvider jwtProvider;
+/**
+ * Service for authentication
+ * Provides registration, creation/update of jwt tokens
+ */
+public interface AuthService {
 
-    @Transactional
-    public void save(RegistrationDto dto) {
-        UserCredentials uc = new UserCredentials();
-        uc.setLogin(dto.getLogin());
-        uc.setPassword(passwordEncoder.encode(dto.getPassword()));
-        uc.setRole(dto.getRole());
-        uc.setUserId(dto.getUserId());
-        repository.save(uc);
-    }
+    /**
+     * Saves credentials to database
+     *
+     * @param dto object with log,password, role and id
+     */
+    void save(RegistrationDto dto);
 
-    public JwtDto login(AuthDto request){
-        UserCredentials user = repository.findByLogin(request.getLogin())
-                .orElseThrow(() -> new AuthException("Invalid login or password"));
+    /**
+     * Maketh authentication to the system
+     *
+     * @param request object with login and password
+     * @return access and refresh tokens
+     * @throws com.authservice.exception.AuthException if data is wrong
+     */
+    JwtDto login(AuthDto request);
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new AuthException("Invalid login or password");
-        }
-
-        return new JwtDto(
-                jwtProvider.generateAccessToken(user),
-                jwtProvider.generateRefreshToken(user)
-        );
-    }
-
-    public JwtDto refresh(String refreshToken)  {
-        if (!jwtProvider.validateToken(refreshToken)) {
-            throw new AuthException("Invalid refresh token");
-        }
-        String login = jwtProvider.getLoginFromToken(refreshToken);
-        UserCredentials user = repository.findByLogin(login)
-                .orElseThrow(() -> new AuthException("User not found"));
-
-        return new JwtDto(
-                jwtProvider.generateAccessToken(user),
-                jwtProvider.generateRefreshToken(user)
-        );
-    }
+    /**
+     * Refresh both access and refresh tokens using refresh token
+     *
+     * @param refreshToken current refresh token
+     * @return new pair of access and refresh tokens
+     * @throws com.authservice.exception.AuthException if token is invalid or data is invalid
+     */
+    JwtDto refresh(String refreshToken);
 }

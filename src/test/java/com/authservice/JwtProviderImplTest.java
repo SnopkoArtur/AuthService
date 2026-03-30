@@ -2,7 +2,7 @@ package com.authservice;
 
 import com.authservice.entity.Role;
 import com.authservice.entity.UserCredentials;
-import com.authservice.service.JwtProvider;
+import com.authservice.service.JwtProviderImpl;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,16 +10,16 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class JwtProviderTest {
+class JwtProviderImplTest {
 
-    private JwtProvider jwtProvider;
+    private JwtProviderImpl jwtProvider;
     private final String testSecret = "testkeytestkeytestkeytestkeytestkey";
 
     private UserCredentials testUser;
 
     @BeforeEach
     void setUp() {
-        jwtProvider = new JwtProvider();
+        jwtProvider = new JwtProviderImpl();
         ReflectionTestUtils.setField(jwtProvider, "secret", testSecret);
         jwtProvider.init();
         testUser = new UserCredentials();

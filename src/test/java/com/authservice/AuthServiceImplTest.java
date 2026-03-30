@@ -7,8 +7,8 @@ import com.authservice.dto.RegistrationDto;
 import com.authservice.entity.Role;
 import com.authservice.entity.UserCredentials;
 import com.authservice.exception.AuthException;
-import com.authservice.service.AuthService;
-import com.authservice.service.JwtProvider;
+import com.authservice.service.AuthServiceImpl;
+import com.authservice.service.JwtProviderImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AuthServiceTest {
+class AuthServiceImplTest {
 
     @Mock
     private UserCredentialsRepository repository;
@@ -33,10 +33,10 @@ class AuthServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @Mock
-    private JwtProvider jwtProvider;
+    private JwtProviderImpl jwtProvider;
 
     @InjectMocks
-    private AuthService authService;
+    private AuthServiceImpl authService;
 
     private UserCredentials userCredentials;
 
