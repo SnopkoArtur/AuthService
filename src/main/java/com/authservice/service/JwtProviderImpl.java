@@ -27,7 +27,7 @@ public class JwtProviderImpl implements JwtProvider {
                 .setSubject(user.getLogin())
                 .claim("userId", user.getUserId())
                 .claim("role", user.getRole().name())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 15))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 15 * 20))
                 .signWith(key)
                 .compact();
     }
